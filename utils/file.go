@@ -27,7 +27,7 @@ func CheckFileExist(filename string) bool {
 }
 
 func ReadLine(filename string) {
-	file, err := os.Open("E:/test/test.txt")
+	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
 		return

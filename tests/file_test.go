@@ -32,5 +32,5 @@ func TestFilePath(t *testing.T) {
 }
 
 func TestReadLine(t *testing.T) {
-	utils.ReadLine("E:/test/test.txt")
+	utils.ReadLine("E:/test/Redis in action-1.md")
 }
