@@ -12,3 +12,9 @@ func TestReg(t *testing.T) {
 		t.Log(value)
 	}
 }
+
+func TestReplaceOneLine(t *testing.T) {
+	text := "This is a picture ![百度](C:\\Users\\Ther\\AppData\\Roaming\\Typora\\typora-user-images\\image-20200301223735099.png). And here is another. ![腾讯QQ](https://qq.com)"
+	reText := utils.ReplaceUrlFromOneLine(text, []string{"First", "Second"})
+	t.Log(reText)
+}

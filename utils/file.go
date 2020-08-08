@@ -26,7 +26,7 @@ func CheckFileExist(filename string) bool {
 	return true
 }
 
-func ReadLine(filename string) {
+func ReplaceOneLine(filename string, picDirPath string) {
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
@@ -39,7 +39,12 @@ func ReadLine(filename string) {
 	}()
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		fmt.Println(scanner.Text())
+		urls := GetUrlFromOneLine(scanner.Text())
+		if len(urls) != 0 {
+			for _, url := range urls {
+				fmt.Println(url)
+			}
+		}
 	}
 	err = scanner.Err()
 	if err != nil {

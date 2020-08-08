@@ -8,9 +8,10 @@ import (
 )
 
 func TestCheckFileExist(t *testing.T) {
-	t.Log(utils.CheckFileExist("E:/test/Redis in action.md"))
-	t.Log(utils.CheckFileExist("E:/test/Redis in action-1.md"))
-	t.Log(utils.CheckFileExist("E:/test/test.txt"))
+	t.Log(utils.CheckFileExist("E:/测试/Redis in action.md"))
+	t.Log(utils.CheckFileExist("E:/测试/Redis in action-1.md"))
+	t.Log(utils.CheckFileExist("E:/测试/test.txt"))
+	t.Log(utils.CheckFileExist("httpaaaa://baidu.com"))
 }
 
 func TestReadDir(t *testing.T) {
@@ -31,6 +32,6 @@ func TestFilePath(t *testing.T) {
 	t.Log(os.Args[0])
 }
 
-func TestReadLine(t *testing.T) {
-	utils.ReadLine("E:/test/Redis in action-1.md")
+func TestReplaceFromOneLine(t *testing.T) {
+	utils.ReplaceOneLine("E:/test/Redis in action-1.md", "")
 }
