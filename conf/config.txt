@@ -1,0 +1,4 @@
+access_key:your_access_key
+secret_key:your_secret_key
+host:your_host
+bucket:your_bucket

@@ -20,13 +20,13 @@ func ReadDirFilesExcludeSubDir(dirPath string) ([]os.FileInfo, error) {
 // 检查某个文件是否存在
 func CheckFileExist(filename string) bool {
 	// TODO IsNotExist 与 IsExist
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
+	if _, err := os.Stat(filename); err != nil {
 		return false
 	}
 	return true
 }
 
-func ReplaceOneLine(filename string, picDirPath string) {
+func ReplaceOneLine(filename string) {
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)

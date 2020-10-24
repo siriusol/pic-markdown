@@ -2,11 +2,14 @@ package utils
 
 import (
 	"context"
-	"github.com/qiniu/api.v7/v7/auth/qbox"
-	"github.com/qiniu/api.v7/v7/storage"
 	"log"
+	"net/url"
+	"os"
 	"strings"
 	"time"
+
+	"github.com/qiniu/api.v7/v7/auth/qbox"
+	"github.com/qiniu/api.v7/v7/storage"
 )
 
 // 自定义返回值结构体
@@ -19,10 +22,17 @@ type PutRet struct {
 }
 
 func GenerateUploadToken() string {
-	accessKey := "t48lashcsN_X6hG4PXiF7ITYPwyBrkAhJw4QLfWQ"
-	secretKey := "lE1TFvATyOJ2Wo6EF-CTy3ZANZMYXanTJGAlzzOM"
+	nowPath, err := os.Getwd()
+	if err != nil {
+		log.Printf("[GenerateUploadToken] [Getwd] error:%v", err)
+		return ""
+	}
+	configPath := nowPath + "\\conf\\config.txt"
+	accessKey := Get(configPath, "access_key")
+	secretKey := Get(configPath, "secret_key")
+	bucket := Get(configPath, "bucket")
 	mac := qbox.NewMac(accessKey, secretKey)
-	bucket := "ther-pic"
+
 	putPolicy := storage.PutPolicy{
 		Scope: bucket,
 		// Expires: 7200,
@@ -33,11 +43,11 @@ func GenerateUploadToken() string {
 	return upToken
 }
 
-func UploadFile(file string) {
+func UploadFile(file string) (cloudUrl string) {
 
 	log.Printf("Upload file %s start...", file)
 	index := strings.LastIndex(file, "\\")
-	key := file[index+1:] + "?time=" + time.Now().Format("2006-01-02 15:04:05")
+	key := file[index+1:] + "?time=" + time.Now().Format("2006-01-02#15:04:05")
 	log.Println(key)
 	cfg := storage.Config{}
 	formUploader := storage.NewFormUploader(&cfg)
@@ -55,4 +65,8 @@ func UploadFile(file string) {
 	log.Printf("File:%v\n", ret)
 
 	log.Printf("Upload file %s Success!", file)
+
+	encodeKey := url.QueryEscape(ret.Key)
+
+	return "qip9mf1yt.hb-bkt.clouddn.com/" + encodeKey
 }

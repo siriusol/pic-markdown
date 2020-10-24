@@ -1,8 +1,9 @@
 package tests
 
 import (
-	"github.com/siriusol/pic-markdown/utils"
 	"testing"
+
+	"github.com/siriusol/pic-markdown/utils"
 )
 
 func TestGenerateUploadToken(t *testing.T) {
@@ -11,5 +12,7 @@ func TestGenerateUploadToken(t *testing.T) {
 }
 
 func TestUploadFile(t *testing.T) {
-	utils.UploadFile("C:\\Users\\Ther\\AppData\\Roaming\\Typora\\typora-user-images\\image-20200301223735099.png")
+	cloudUrl := utils.UploadFile("E:\\测试图片\\Redis比较.jpg")
+	// cloudUrl := utils.UploadFile("C:\\Users\\Ther\\AppData\\Roaming\\Typora\\typora-user-images\\image-20200301223735099.png")
+	t.Log(cloudUrl)
 }

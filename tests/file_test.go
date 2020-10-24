@@ -1,17 +1,18 @@
 package tests
 
 import (
-	"github.com/siriusol/pic-markdown/utils"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/siriusol/pic-markdown/utils"
 )
 
 func TestCheckFileExist(t *testing.T) {
 	t.Log(utils.CheckFileExist("E:/测试/Redis in action.md"))
 	t.Log(utils.CheckFileExist("E:/测试/Redis in action-1.md"))
 	t.Log(utils.CheckFileExist("E:/测试/test.txt"))
-	t.Log(utils.CheckFileExist("httpaaaa://baidu.com"))
+	t.Log(utils.CheckFileExist("https://baidu.com"))
 }
 
 func TestReadDir(t *testing.T) {
@@ -33,5 +34,5 @@ func TestFilePath(t *testing.T) {
 }
 
 func TestReplaceFromOneLine(t *testing.T) {
-	utils.ReplaceOneLine("E:/test/Redis in action-1.md", "")
+	utils.ReplaceOneLine("E:/test/Redis in action-1.md")
 }

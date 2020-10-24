@@ -1,8 +1,9 @@
 package tests
 
 import (
-	"github.com/siriusol/pic-markdown/utils"
 	"testing"
+
+	"github.com/siriusol/pic-markdown/utils"
 )
 
 func TestReg(t *testing.T) {
