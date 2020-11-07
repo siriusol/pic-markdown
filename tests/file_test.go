@@ -16,10 +16,12 @@ func TestCheckFileExist(t *testing.T) {
 }
 
 func TestReadDir(t *testing.T) {
-	files1, _ := utils.ReadDirFilesExcludeSubDir("E:/test")
-	for _, file := range files1 {
+	files, _ := utils.ReadDirFiles("E:/test")
+	for _, file := range files {
 		if !file.IsDir() {
-			t.Log(file.Name(), file.Size(), file.Mode(), file.ModTime(), file.IsDir(), file.Sys())
+			t.Log("File:", file.Name(), file.Size(), file.Mode(), file.ModTime(), file.IsDir(), file.Sys())
+		} else {
+			t.Log("Dir:", file.Name(), file.Size(), file.Mode(), file.ModTime(), file.IsDir(), file.Sys())
 		}
 	}
 }
@@ -33,6 +35,8 @@ func TestFilePath(t *testing.T) {
 	t.Log(os.Args[0])
 }
 
-func TestReplaceFromOneLine(t *testing.T) {
-	utils.ReplaceOneLine("E:/test/Redis in action-1.md")
+func TestGetAllUrlsFromFile(t *testing.T) {
+	urls := utils.GetAllUrlsFromFile("E:/test/Redis in action-1.md")
+	t.Log(len(urls))
+	t.Log(urls)
 }

@@ -19,11 +19,11 @@ func main() {
 }
 
 func execute(textDirPath, picDirPath string) {
-	texts, textErr := utils.ReadDirFilesExcludeSubDir(textDirPath)
+	texts, textErr := utils.ReadDirFiles(textDirPath)
 	if textErr != nil {
 		log.Fatal(textErr)
 	}
-	_, picErr := utils.ReadDirFilesExcludeSubDir(picDirPath)
+	_, picErr := utils.ReadDirFiles(picDirPath)
 	if picErr != nil {
 		log.Fatal(picErr)
 		return
@@ -31,7 +31,7 @@ func execute(textDirPath, picDirPath string) {
 	for _, text := range texts {
 		if !text.IsDir() {
 			// TODO  Replace separator.
-			utils.ReplaceOneLine(textDirPath + "\\" + text.Name())
+			utils.GetAllUrlsFromFile(textDirPath + "\\" + text.Name())
 		}
 	}
 }

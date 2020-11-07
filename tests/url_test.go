@@ -11,5 +11,4 @@ func TestUrl(t *testing.T) {
 	fmt.Println(decodeUrl)
 	encodeUrl := url.QueryEscape(decodeUrl)
 	fmt.Println(encodeUrl)
-
 }

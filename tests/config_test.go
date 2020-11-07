@@ -11,9 +11,9 @@ import (
 func TestConfig(t *testing.T) {
 	fmt.Println(os.Getwd())
 
-	path := "F:/STUDY/study-go/src/github.com/siriusol/pic-markdown/conf/config.txt"
-	fmt.Println(utils.Get(path, "access_key"))
-	fmt.Println(utils.Get(path, "secret_key"))
-	fmt.Println(utils.Get(path, "host"))
-	fmt.Println(utils.Get(path, "bucket"))
+	path := "../conf/config.txt"
+	fmt.Println(utils.GetValueByConfig(path, "access_key"))
+	fmt.Println(utils.GetValueByConfig(path, "secret_key"))
+	fmt.Println(utils.GetValueByConfig(path, "host"))
+	fmt.Println(utils.GetValueByConfig(path, "bucket"))
 }

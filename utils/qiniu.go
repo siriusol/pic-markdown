@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/url"
-	"os"
 	"strings"
 	"time"
 
@@ -12,42 +11,39 @@ import (
 	"github.com/qiniu/api.v7/v7/storage"
 )
 
-// 自定义返回值结构体
-type PutRet struct {
-	Key    string
-	Hash   string
-	Fsize  int
-	Bucket string
-	Name   string
+// 获取七牛云配置
+func GetQiNiuConfig(configPath string) QiNiuConfig {
+	config := QiNiuConfig{}
+	if exist := CheckFileExist(configPath); !exist {
+		log.Fatalf("[GetQiNiuConfig] [CheckFileExist] file %s is not exist!", configPath)
+		return config
+	}
+	config.AccessKey = GetValueByConfig(configPath, "access_key")
+	config.SecretKey = GetValueByConfig(configPath, "secret_key")
+	config.Host = GetValueByConfig(configPath, "host")
+	config.Bucket = GetValueByConfig(configPath, "bucket")
+
+	return config
 }
 
-func GenerateUploadToken() string {
-	nowPath, err := os.Getwd()
-	if err != nil {
-		log.Printf("[GenerateUploadToken] [Getwd] error:%v", err)
-		return ""
-	}
-	configPath := nowPath + "\\conf\\config.txt"
-	accessKey := Get(configPath, "access_key")
-	secretKey := Get(configPath, "secret_key")
-	bucket := Get(configPath, "bucket")
-	mac := qbox.NewMac(accessKey, secretKey)
-
+// 生成上传 token
+func GenerateUploadToken(config QiNiuConfig) string {
+	mac := qbox.NewMac(config.AccessKey, config.SecretKey)
 	putPolicy := storage.PutPolicy{
-		Scope: bucket,
+		Scope: config.Bucket,
 		// Expires: 7200,
 		ReturnBody: `{"key":"$(key)","hash":"$(etag)","fsize":$(fsize),"bucket":"$(bucket)","name":"$(x:name)"}`,
 	}
 	// putPolicy.Expires = 7200 // 有效期以秒为单位
 	upToken := putPolicy.UploadToken(mac)
+
 	return upToken
 }
 
-func UploadFile(file string) (cloudUrl string) {
-
-	log.Printf("Upload file %s start...", file)
-	index := strings.LastIndex(file, "\\")
-	key := file[index+1:] + "?time=" + time.Now().Format("2006-01-02#15:04:05")
+func UploadFile(filePath string, config QiNiuConfig) (cloudUrl string, err error) {
+	log.Printf("Upload file %s start...", filePath)
+	index := strings.LastIndex(filePath, "\\")
+	key := filePath[index+1:] + "-on" + time.Now().Format("2006-01-02at15-04-05")
 	log.Println(key)
 	cfg := storage.Config{}
 	formUploader := storage.NewFormUploader(&cfg)
@@ -57,16 +53,16 @@ func UploadFile(file string) (cloudUrl string) {
 			"x:name": "github logo",
 		},
 	}
-	upToken := GenerateUploadToken()
-	err := formUploader.PutFile(context.Background(), &ret, upToken, key, file, &putExtra)
+	upToken := GenerateUploadToken(config)
+	err = formUploader.PutFile(context.Background(), &ret, upToken, key, filePath, &putExtra)
 	if err != nil {
 		log.Fatal("Upload error:", err)
+		return "", err
 	}
-	log.Printf("File:%v\n", ret)
-
-	log.Printf("Upload file %s Success!", file)
-
+	log.Printf("File:%+v\n", ret)
+	log.Printf("Upload file %s Success!", filePath)
 	encodeKey := url.QueryEscape(ret.Key)
+	encodeKey = strings.ReplaceAll(encodeKey, "+", "%20")
 
-	return "qip9mf1yt.hb-bkt.clouddn.com/" + encodeKey
+	return config.Host + "/" + encodeKey, nil
 }

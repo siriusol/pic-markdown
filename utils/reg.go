@@ -28,14 +28,14 @@ func GetUrlFromOneLine(str string) []string {
 	return urls
 }
 
-func ReplaceUrlFromOneLine(url string, clouds []string) string {
+func ReplaceUrlFromOneLine(lineText string, clouds []string) string {
 	regStr := `!\[.*?\]\(.*?\)`
 	reg := regexp.MustCompile(regStr)
 	if reg == nil {
 		log.Fatal("regexp error")
 		return ""
 	}
-	result := reg.FindAllString(url, -1)
+	result := reg.FindAllString(lineText, -1)
 	for i := 0; i < len(result); i++ {
 		var left, right int
 		for i, char := range result[i] {
@@ -46,20 +46,18 @@ func ReplaceUrlFromOneLine(url string, clouds []string) string {
 				right = i
 			}
 		}
-		uploadFileUrl := result[i][left+1 : right]
+		toUploadFilePath := result[i][left+1 : right]
 
-		if strings.HasPrefix(uploadFileUrl, "http://") || strings.HasPrefix(uploadFileUrl, "http") {
-			log.Println("File is already on Internet.")
+		if strings.HasPrefix(toUploadFilePath, "http://") || strings.HasPrefix(toUploadFilePath, "http") {
+			log.Printf("File %s is already on Internet", toUploadFilePath)
 			continue
 		}
-		if !CheckFileExist(uploadFileUrl) {
-			log.Printf("File %s is not exist!", uploadFileUrl)
+		if !CheckFileExist(toUploadFilePath) {
+			log.Printf("File %s is not exist!", toUploadFilePath)
 			continue
 		}
-		UploadFile(uploadFileUrl)
-
-		repStr := strings.ReplaceAll(result[i], uploadFileUrl, "666")
-		url = strings.ReplaceAll(url, result[i], repStr)
+		repStr := strings.ReplaceAll(result[i], toUploadFilePath, "666")
+		lineText = strings.ReplaceAll(lineText, result[i], repStr)
 	}
-	return url
+	return lineText
 }
